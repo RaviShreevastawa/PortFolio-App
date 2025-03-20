@@ -4,23 +4,31 @@ import bcrypt from "bcryptjs";
 
 const userSchema = new Schema(
   {
-    fullname : {
+    fullname: {
       type: String,
       required: true,
-      trim: true,  
+      trim: true,
     },
-    email : {
+    email: {
       type: String,
       required: true,
       lowercase: true,
-      unique: true,  
+      unique: true,
     },
-    password : {
+    password: {
       type: String,
       required: true,
     },
+    role: {
+      type: String,
+      enum: ["user", "admin"], // Role-based authentication
+      default: "user",
+    },
+    profileImage : { 
+      type: String, default: "" 
+    },
     refreshToken: {
-      type: String,  
+      type: String,
     },
   },
   {
@@ -47,8 +55,9 @@ userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       _id: this._id,
-      username: this.username,
+      fullname: this.fullname,
       email: this.email,
+      role: this.role, // Include role in the token
     },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: process.env.ACCESS_TOKEN_EXPIRY || "1h" }
