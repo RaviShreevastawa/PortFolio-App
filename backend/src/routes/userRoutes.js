@@ -7,7 +7,16 @@ import {
     getUserProfile
 } from "../controllers/userController.js";
 import { authenticateUser } from "../middleware/authMiddleware.js";
-import { upload } from "../middleware/uploadMiddleware.js";
+import multer from "multer";
+
+// Multer setup for file upload
+const storage = multer.diskStorage({
+    destination: "uploads/",
+    filename: (req, file, cb) => {
+        cb(null, `${req.user._id}-${Date.now()}${file.originalname}`);
+    },
+});
+const upload = multer({ storage });
 
 const router = express.Router();
 

@@ -1,14 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/authSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { login, register } from "../redux/authSlice"; // ✅ Import register
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { user, loading, error } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,13 +26,12 @@ const Login = () => {
       toast.error("All fields are required!");
       return;
     }
-
     try {
-      const result = await dispatch(login(formData)).unwrap();
-      toast.success(`Welcome back, ${result.fullname}!`);
+      await dispatch(login(formData)).unwrap();
+      toast.success("Logged in successfully!");
       navigate("/dashboard");
-    } catch (err) {
-      toast.error(err || "Login failed");
+    } catch (error) {
+      toast.error(error || "Login failed");
     }
   };
 
@@ -34,7 +39,7 @@ const Login = () => {
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-semibold text-center text-gray-800">Login</h2>
-        <p className="text-gray-600 text-center">Access your account to explore projects</p>
+        <p className="text-gray-600 text-center">Access your account</p>
 
         {error && <p className="text-red-500 text-center">{error}</p>}
 
@@ -67,10 +72,10 @@ const Login = () => {
         </form>
 
         <p className="text-center text-gray-600 mt-3">
-          Don't have an account?{" "}
-          <Link to="/register" className="text-blue-500 hover:underline">
+          Don't have an account? {" "}
+          <a href="/register" className="text-blue-500 hover:underline">
             Register here
-          </Link>
+          </a>
         </p>
       </div>
     </div>

@@ -1,12 +1,19 @@
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 
-// Storage Configuration
+// Ensure "uploads/" directory exists
+const uploadDir = "uploads";
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Multer Storage Configuration
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "uploads/"); // Store files in "uploads" directory
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
     },
-    filename: function (req, file, cb) {
+    filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
         cb(null, file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname));
     }
@@ -21,7 +28,7 @@ const fileFilter = (req, file, cb) => {
     if (extname && mimetype) {
         return cb(null, true);
     } else {
-        cb(new Error("Only images (JPG, PNG) are allowed"));
+        cb(new Error("Invalid file type. Only JPEG, JPG, and PNG images are allowed."));
     }
 };
 
@@ -29,5 +36,5 @@ const fileFilter = (req, file, cb) => {
 export const upload = multer({
     storage,
     fileFilter,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max file size
 });

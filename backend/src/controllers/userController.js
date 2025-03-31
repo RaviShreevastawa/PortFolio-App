@@ -4,6 +4,18 @@ import { User } from "../models/userSchema.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import { ApiResponse } from "../utils/Response.js";
 import { ApiError } from "../utils/ApiError.js";
+import multer from "multer";
+
+// Multer setup for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads/");
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${req.user._id}-${Date.now()}${path.extname(file.originalname)}`);
+    },
+});
+const upload = multer({ storage }).single("profilePic");
 
 // Helper Function: Generate Access & Refresh Tokens
 const generateAccessAndRefreshTokens = async (userId) => {
@@ -74,27 +86,28 @@ export const logoutUser = asyncHandler(async (req, res) => {
 
 // Upload Profile Image
 export const uploadProfileImage = asyncHandler(async (req, res) => {
-    if (!req.file) {
-        throw new ApiError(400, "No image uploaded.");
-    }
-
-    const user = await User.findById(req.user._id);
-    if (!user) {
-        throw new ApiError(404, "User not found.");
-    }
-
-    // Delete the old profile image if exists
-    if (user.profileImage) {
-        const oldImagePath = path.join("uploads", user.profileImage);
-        if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
+    upload(req, res, async (err) => {
+        if (err) {
+            throw new ApiError(500, "File upload failed");
         }
-    }
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            throw new ApiError(404, "User not found.");
+        }
 
-    user.profileImage = req.file.filename;
-    await user.save();
+        // Delete the old profile image if exists
+        if (user.profileImage) {
+            const oldImagePath = path.join("uploads", user.profileImage);
+            if (fs.existsSync(oldImagePath)) {
+                fs.unlinkSync(oldImagePath);
+            }
+        }
 
-    res.status(200).json(new ApiResponse(200, user, "Profile image updated successfully."));
+        user.profileImage = req.file.filename;
+        await user.save();
+
+        res.status(200).json(new ApiResponse(200, user, "Profile image updated successfully."));
+    });
 });
 
 // Get User Profile

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { register } from "../redux/authSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { register } from "../redux/authSlice";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -25,13 +25,17 @@ const Register = () => {
       toast.error("All fields are required!");
       return;
     }
-
     try {
-      await dispatch(register(formData)).unwrap();
+      const result = await dispatch(register(formData)).unwrap();
+      localStorage.setItem("user", JSON.stringify(result));
       toast.success("Registration successful! Please log in.");
+      
+      // Clear form fields after successful registration
+      setFormData({ fullname: "", email: "", password: "" });
+      
       navigate("/login");
-    } catch (err) {
-      toast.error(err || "Registration failed");
+    } catch (error) {
+      toast.error(error || "Registration failed");
     }
   };
 
@@ -43,13 +47,14 @@ const Register = () => {
 
         {error && <p className="text-red-500 text-center">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="mt-4">
+        <form onSubmit={handleSubmit} className="mt-4" autoComplete="off">
           <input
             type="text"
             name="fullname"
             placeholder="Full Name"
-            value={formData.fullname}
+            value={formData.fullname || ""}
             onChange={handleChange}
+            autoComplete="off"
             className="w-full p-2 border rounded-md mb-2"
           />
 
@@ -57,8 +62,9 @@ const Register = () => {
             type="email"
             name="email"
             placeholder="Email"
-            value={formData.email}
+            value={formData.email || ""}
             onChange={handleChange}
+            autoComplete="off"
             className="w-full p-2 border rounded-md mb-2"
           />
 
@@ -66,8 +72,9 @@ const Register = () => {
             type="password"
             name="password"
             placeholder="Password"
-            value={formData.password}
+            value={formData.password || ""}
             onChange={handleChange}
+            autoComplete="off"
             className="w-full p-2 border rounded-md mb-2"
           />
 
@@ -82,9 +89,9 @@ const Register = () => {
 
         <p className="text-center text-gray-600 mt-3">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline">
+          <a href="/login" className="text-blue-500 hover:underline">
             Login here
-          </Link>
+          </a>
         </p>
       </div>
     </div>

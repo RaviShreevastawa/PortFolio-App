@@ -2,12 +2,15 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { updateUserProfile } from "../redux/actions/authActions";
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+
   const [selectedFile, setSelectedFile] = useState(null);
-  const [preview, setPreview] = useState(user?.profilePicture || "");
-  
+  const [preview, setPreview] = useState(user?.profileImage ? `/uploads/${user.profileImage}` : "");
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -23,27 +26,27 @@ const Profile = () => {
     }
 
     const formData = new FormData();
-    formData.append("profilePicture", selectedFile);
+    formData.append("profileImage", selectedFile);
 
     try {
-      const { data } = await axios.put("/api/v1/users/profile", formData, {
+      const { data } = await axios.post("/api/v1/users/upload-profile", formData, {
         headers: {
-          Authorization: `Bearer ${user.accessToken}`,
           "Content-Type": "multipart/form-data",
         },
+        withCredentials: true, // Ensure cookies (tokens) are sent
       });
 
+      dispatch(updateUserProfile(data.data)); // Update Redux store
       toast.success("Profile picture updated!");
-      window.location.reload();
     } catch (error) {
-      toast.error("Failed to update profile picture.");
+      toast.error(error.response?.data?.message || "Failed to update profile picture.");
     }
   };
 
   return (
     <div className="flex flex-col items-center mt-10">
       <h2 className="text-3xl font-bold mb-4">Your Profile</h2>
-      
+
       <div className="relative w-40 h-40 rounded-full overflow-hidden shadow-lg">
         {preview ? (
           <img src={preview} alt="Profile" className="w-full h-full object-cover" />
@@ -63,7 +66,7 @@ const Profile = () => {
 
       <button
         onClick={handleUpload}
-        className="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+        className="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
       >
         Upload
       </button>

@@ -25,7 +25,8 @@ const userSchema = new Schema(
       default: "user",
     },
     profileImage : { 
-      type: String, default: "" 
+      type: String, 
+      default: "" 
     },
     refreshToken: {
       type: String,
