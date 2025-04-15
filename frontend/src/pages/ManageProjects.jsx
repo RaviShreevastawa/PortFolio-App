@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import API from "../api/api";
 import { toast } from "react-toastify";
 
 const ManageProjects = () => {
@@ -11,8 +11,12 @@ const ManageProjects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const { data } = await axios.get("/api/v1/projects");
-        setProjects(data.projects);
+        const { data } = await API.get("/api/v1/projects");
+        if (Array.isArray(data.projects)) {
+          setProjects(data.projects);
+        } else {
+          setProjects([]);  // Fallback if response is not an array
+        }
       } catch (error) {
         toast.error("Failed to fetch projects.");
       }
@@ -31,7 +35,7 @@ const ManageProjects = () => {
     }
 
     try {
-      const { data } = await axios.post("/api/v1/projects", newProject, {
+      const { data } = await API.post("/api/v1/projects", newProject, {
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
 
@@ -45,7 +49,7 @@ const ManageProjects = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/v1/projects/${id}`, {
+      await API.delete(`/api/v1/projects/${id}`, {
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
 
@@ -88,23 +92,25 @@ const ManageProjects = () => {
       <h3 className="text-xl font-semibold mb-4">Existing Projects</h3>
       {projects.length > 0 ? (
         <ul>
-          {projects.map((project) => (
-            <li key={project._id} className="flex justify-between items-center border-b py-2">
-              <div>
-                <h4 className="text-lg font-semibold">{project.title}</h4>
-                <p className="text-gray-600">{project.description}</p>
-              </div>
-              <button
-                onClick={() => handleDelete(project._id)}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700"
-              >
-                Delete
-              </button>
-            </li>
-          ))}
+          {projects
+            .filter((project) => project && project._id)  // Defensive check
+            .map((project) => (
+              <li key={project._id} className="flex justify-between items-center border-b py-2">
+                <div>
+                  <h4 className="text-lg font-semibold">{project.title}</h4>
+                  <p className="text-gray-600">{project.description}</p>
+                </div>
+                <button
+                  onClick={() => handleDelete(project._id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
         </ul>
       ) : (
-        <p className="text-gray-500">No projects found.</p>
+        <p className="text-lime-950">No projects found.</p>
       )}
     </div>
   );

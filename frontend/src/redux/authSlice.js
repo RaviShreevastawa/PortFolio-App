@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import API from "../api/api";
+import API from "../api/api.js";
 
 // Load user and token from Local Storage
 const storedUser = (() => {
@@ -14,14 +14,19 @@ const storedUser = (() => {
 const storedToken = localStorage.getItem("accessToken") || null;
 
 // ✅ Register User
-export const register = createAsyncThunk("auth/register", async (userData, { rejectWithValue }) => {
-  try {
-    const { data } = await API.post("/api/v1/users/register", userData);
-    return data.user;
-  } catch (error) {
-    return rejectWithValue(error.response?.data?.message || "Registration failed");
+export const register = createAsyncThunk(
+  "auth/register",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const { data } = await API.post("/api/v1/users/register", userData);
+      return data.user;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Registration failed"
+      );
+    }
   }
-});
+);
 
 // ✅ Login User
 export const login = createAsyncThunk("auth/login", async (userData, { rejectWithValue }) => {
@@ -38,12 +43,45 @@ export const login = createAsyncThunk("auth/login", async (userData, { rejectWit
   }
 });
 
-// ✅ Logout User
-export const logout = createAsyncThunk("auth/logout", async () => {
-  await API.post("/api/v1/users/logout");
-  localStorage.removeItem("user");
-  localStorage.removeItem("accessToken");
-  return null;
+// ✅ Logout User (Includes clearing everything)
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      await API.post("/api/v1/users/logout", {}, { withCredentials: true });
+
+      // Clear local storage on logout
+      localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
+
+      return null;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Logout failed. Please try again."
+      );
+    }
+  }
+);
+
+export const updateUserProfile = createAsyncThunk("auth/updateProfile", async (profileData, { rejectWithValue }) => {
+  try {
+    const { data } = await API.put("/api/v1/users/profile", profileData);
+    localStorage.setItem("user", JSON.stringify(data.user)); // Update stored user
+    return data.user;
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || "Profile update failed");
+  }
+});
+
+export const uploadProfileImage = createAsyncThunk("auth/uploadProfileImage", async (formData, { rejectWithValue }) => {
+  try {
+    const { data } = await API.post("/api/v1/users/upload-profile", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return data.user;
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || "Image upload failed");
+  }
 });
 
 // ✅ Redux Slice
@@ -56,6 +94,13 @@ const authSlice = createSlice({
     },
     setToken: (state, action) => {
       state.token = action.payload;
+    },
+    forceLogout: (state) => {
+      // This is for token expiration handling
+      state.user = null;
+      state.token = null;
+      localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
     }
   },
   extraReducers: (builder) => {
@@ -94,5 +139,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError, setToken } = authSlice.actions;
+export const { clearError, setToken, forceLogout } = authSlice.actions;
 export default authSlice.reducer;

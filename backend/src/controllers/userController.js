@@ -84,30 +84,30 @@ export const logoutUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "User logged out successfully."));
 });
 
-// Upload Profile Image
+/// Upload Profile Image
 export const uploadProfileImage = asyncHandler(async (req, res) => {
-    upload(req, res, async (err) => {
-        if (err) {
-            throw new ApiError(500, "File upload failed");
-        }
-        const user = await User.findById(req.user._id);
-        if (!user) {
-            throw new ApiError(404, "User not found.");
-        }
+    if (!req.file) {
+        throw new ApiError(400, "No file uploaded.");
+    }
 
-        // Delete the old profile image if exists
-        if (user.profileImage) {
-            const oldImagePath = path.join("uploads", user.profileImage);
-            if (fs.existsSync(oldImagePath)) {
-                fs.unlinkSync(oldImagePath);
-            }
+    const user = await User.findById(req.user._id);
+    if (!user) {
+        throw new ApiError(404, "User not found.");
+    }
+
+    // Delete the old profile image if it exists
+    if (user.profileImage) {
+        const oldImagePath = path.join("uploads", user.profileImage);
+        if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
         }
+    }
 
-        user.profileImage = req.file.filename;
-        await user.save();
+    // Save new image filename
+    user.profileImage = req.file.filename;
+    await user.save();
 
-        res.status(200).json(new ApiResponse(200, user, "Profile image updated successfully."));
-    });
+    res.status(200).json(new ApiResponse(200, user, "Profile image updated successfully."));
 });
 
 // Get User Profile

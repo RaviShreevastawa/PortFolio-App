@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
+import API from '../api/api'
 import { toast } from "react-toastify";
 
 const ProjectDetails = () => {
@@ -11,7 +12,7 @@ const ProjectDetails = () => {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const { data } = await axios.get(`/api/v1/projects/${id}`);
+        const { data } = await API.get(`/api/v1/projects/${id}`);
         setProject(data.project);
       } catch (error) {
         toast.error("Failed to load project details.");

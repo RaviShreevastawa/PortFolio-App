@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
+//import axios from "axios";
 import { toast } from "react-toastify";
-import { updateUserProfile } from "../redux/actions/authActions";
+import { updateUserProfile } from "../redux/authActions";
+import API from "../api/api"
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ const Profile = () => {
     const file = e.target.files[0];
     if (file) {
       setSelectedFile(file);
-      setPreview(URL.createObjectURL(file)); // Show preview
+      setPreview(URL.createObjectURL(file));
     }
   };
 
@@ -29,14 +30,15 @@ const Profile = () => {
     formData.append("profileImage", selectedFile);
 
     try {
-      const { data } = await axios.post("/api/v1/users/upload-profile", formData, {
+      const { data } = await API.post("/api/v1/users/upload-profile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${user.token}`,
         },
-        withCredentials: true, // Ensure cookies (tokens) are sent
+        withCredentials: true,
       });
 
-      dispatch(updateUserProfile(data.data)); // Update Redux store
+      dispatch(updateUserProfile(data.data));
       toast.success("Profile picture updated!");
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to update profile picture.");

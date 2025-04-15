@@ -31,13 +31,13 @@ export const getAllProjects = asyncHandler(async (req, res) => {
 
 // Get Single Project (Public)
 export const getProjectById = asyncHandler(async (req, res) => {
-    const project = await Project.findById(req.params.id);
+    const projects = await Project.findById(req.params.id);
 
-    if (!project) {
+    if (!projects) {
         throw new ApiError(404, "Project not found.");
     }
 
-    return res.status(200).json(new ApiResponse(200, project, "Project fetched successfully."));
+    return res.status(200).json(new ApiResponse(200, projects, "Project fetched successfully."));
 });
 
 // Update Project (Admin only)

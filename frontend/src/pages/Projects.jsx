@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+//import axios from "axios";
+import API from '../api/api'
 import { toast } from "react-toastify";
 
 const Projects = () => {
@@ -10,7 +11,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const { data } = await axios.get("/api/v1/projects");
+        const { data } = await API.get("/api/v1/projects");
         setProjects(data.projects);
       } catch (error) {
         toast.error("Failed to load projects.");
@@ -22,7 +23,8 @@ const Projects = () => {
   }, []);
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
-  if (!projects.length) return <p className="text-center mt-10 text-gray-500">No projects available.</p>;
+  if (!projects?.length) return <p className="text-center mt-10 text-gray-500">No projects available.</p>;
+  console.log(projects)
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-6">
