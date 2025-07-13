@@ -19,6 +19,9 @@ const Navbar = () => {
           {user ? (
             <>
               <Link to="/dashboard" className="mr-4">Dashboard</Link>
+              <Link to="/profile" className="">Profile</Link>
+              <Link to="/projects" className="">Projects</Link>
+              <Link to="/projects/manage" className="">Manage Projects</Link>
               <button onClick={handleLogout} className="bg-red-500 px-3 py-1 rounded">Logout</button>
             </>
           ) : (

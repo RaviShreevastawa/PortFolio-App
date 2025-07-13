@@ -5,7 +5,7 @@ const Home = () => {
   const { user } = useSelector((state) => state.auth);
 
   return (
-    <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 min-h-screen flex items-center justify-center">
+    <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 min-h-screen flex items-center justify-center w-screen overflow-x-hidden">
       <div className="text-center text-white px-6">
         <h1 className="text-4xl md:text-6xl font-extrabold mb-4">
           Welcome to My Portfolio
@@ -16,7 +16,7 @@ const Home = () => {
 
         <div className="flex justify-center space-x-4">
           {user ? (
-            <Link to="/dashboard" className="bg-green-500 px-6 py-3 text-lg rounded-lg hover:bg-green-700 transition">
+            <Link to="/dashboard" className="border p-20 m-10 rounded-md">
               Go to Dashboard
             </Link>
           ) : (
@@ -34,7 +34,7 @@ const Home = () => {
 
       {/* Floating Graphic */}
       <div className="absolute top-0 right-0">
-        <img src="/assets/hero-graphic.png" alt="Hero Graphic" className="w-80 opacity-50" />
+        <img src="/assets/hero-graphic.png" alt="Nothing Uploaded" className="max-w-[100vw] w-80 opacity-50" />
       </div>
     </div>
   );

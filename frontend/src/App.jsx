@@ -17,7 +17,7 @@ const App = () => {
   return (
     <>
       <Navbar />
-      <main className="container mx-auto px-4">
+      <main className="bg-blue-800 w-full">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={user ? <Navigate to="/dashboard" /> : <Register />} />

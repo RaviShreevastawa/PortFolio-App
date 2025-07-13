@@ -12,6 +12,7 @@ body {
   background-color: #f4f4f4;
   color: #333;
   line-height: 1.6;
+  width: 100vw;
 }
 
 /* Centering the Main Content */

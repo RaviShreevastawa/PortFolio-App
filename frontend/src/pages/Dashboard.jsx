@@ -4,13 +4,15 @@ import { Link } from "react-router-dom";
 const Dashboard = () => {
   const { user } = useSelector((state) => state.auth);
 
+  console.log(user.profileImage)
+
   return (
     <div className="max-w-4xl mx-auto bg-transparent shadow-lg rounded-xl">
       <div className="flex flex-col items-center text-center">
         {/* Profile Picture */}
         <div className="relative">
           <img
-            src={user.profileImage ? `/uploads/${user.profileImage}` : "/default-avatar.png"}
+            src={`http://localhost:4000/uploads/${user.profileImage}`}
             alt="Profile"
             className="w-28 h-28 rounded-full shadow-md object-cover border-4 border-blue-500"
           />
@@ -27,7 +29,7 @@ const Dashboard = () => {
         {/*<p className="text-gray-500 mt-2">{user.email}</p>*/}
       </div>
 
-      <hr className="my-6 border-gray-300" />
+      <hr className="m-10"/>
 
       {/* Role-based Dashboard */}
       <div className="text-center">
