@@ -7,6 +7,7 @@ import {
     deleteProject
 } from "../controllers/projectController.js";
 import { authenticateUser, authorizeRoles } from "../middleware/authMiddleware.js";
+import { upload } from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
@@ -15,8 +16,8 @@ router.get("/", getAllProjects);
 router.get("/:id", getProjectById);
 
 // Admin-Only Routes (CRUD operations)
-router.post("/", authenticateUser, authorizeRoles("admin"), createProject);
-router.put("/:id", authenticateUser, authorizeRoles("admin"), updateProject);
+router.post("/", authenticateUser, authorizeRoles("admin"), upload.single("image"), createProject);
+router.put("/:id", authenticateUser, authorizeRoles("admin"), upload.single("image"), updateProject);
 router.delete("/:id", authenticateUser, authorizeRoles("admin"), deleteProject);
 
 export default router;

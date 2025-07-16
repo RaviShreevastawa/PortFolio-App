@@ -5,23 +5,29 @@ import { ApiError } from "../utils/ApiError.js";
 
 // Create Project (Admin only)
 export const createProject = asyncHandler(async (req, res) => {
-    const { title, description, image, liveLink, githubLink } = req.body;
+  const { title, description, liveLink, githubLink } = req.body;
 
-    if (!title || !description) {
-        throw new ApiError(400, "Title and description are required.");
-    }
+  if (!title || !description) {
+    throw new ApiError(400, "Title and description are required.");
+  }
 
-    const project = await Project.create({
-        title,
-        description,
-        image,
-        liveLink,
-        githubLink,
-        createdBy: req.user._id
-    });
+  // ✅ Fix: get image path from uploaded file
+  const imagePath = req.file ? `/uploads/${req.file.filename}` : "";
 
-    return res.status(201).json(new ApiResponse(201, project, "Project created successfully."));
+  const project = await Project.create({
+    title,
+    description,
+    image: imagePath, // ✅ correctly save image URL to DB
+    liveLink,
+    githubLink,
+    createdBy: req.user._id,
+  });
+
+  return res
+    .status(201)
+    .json(new ApiResponse(201, project, "Project created successfully."));
 });
+
 
 // Get All Projects (Public)
 export const getAllProjects = asyncHandler(async (req, res) => {

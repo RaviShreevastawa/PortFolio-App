@@ -12,7 +12,7 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/dashboard");
+      navigate("/");
     }
   }, [user, navigate]);
 
@@ -29,17 +29,17 @@ const Login = () => {
     try {
       await dispatch(login(formData)).unwrap();
       toast.success("Logged in successfully!");
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       toast.error(error || "Login failed");
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-semibold text-center text-gray-800">Login</h2>
-        <p className="text-gray-600 text-center">Access your account</p>
+    <div className="flex justify-center items-center mt-50">
+      <div className="p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-3xl font-semibold text-center text-black">Login</h2>
+        <p className="text-black text-center">Access your account</p>
 
         {error && <p className="text-red-500 text-center">{error}</p>}
 
@@ -50,7 +50,7 @@ const Login = () => {
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full p-2 border rounded-md mb-2"
+            className="w-full border rounded-md mb-2"
           />
 
           <input
@@ -71,9 +71,9 @@ const Login = () => {
           </button>
         </form>
 
-        <p className="text-center text-gray-600 mt-3">
+        <p className="text-center text-black mt-3">
           Don't have an account? {" "}
-          <a href="/register" className="text-blue-500 hover:underline">
+          <a href="/register" className="text-lime-500 hover:underline">
             Register here
           </a>
         </p>

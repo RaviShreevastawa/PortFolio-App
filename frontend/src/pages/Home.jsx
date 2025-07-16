@@ -1,40 +1,57 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import profile from '../assets/Profile-Pic.png'
 
 const Home = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user, admin } = useSelector((state) => state.auth);
 
   return (
-    <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 min-h-screen flex items-center justify-center w-screen overflow-x-hidden">
-      <div className="text-center text-white px-6">
-        <h1 className="text-4xl md:text-6xl font-extrabold mb-4">
+    <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 grid grid-cols-1 md:grid-cols-2 w-screen overflow-hidden">
+      <div className="text-center mt-10">
+        <h1 className="text-4xl md:text-6xl font-extrabold">
           Welcome to My Portfolio
         </h1>
-        <p className="text-lg md:text-xl mb-6">
+        <p className="text-lg md:text-xl mb-6 mt-10">
           Showcasing innovative projects and creativity. Explore and get inspired!
         </p>
 
-        <div className="flex justify-center space-x-4">
-          {user ? (
-            <Link to="/dashboard" className="border p-20 m-10 rounded-md">
-              Go to Dashboard
-            </Link>
-          ) : (
+        <div className="flex justify-center">
+          {user && (
             <>
-              <Link to="/login" className="bg-white text-blue-600 px-6 py-3 text-lg rounded-lg hover:bg-gray-200 transition">
-                Login
-              </Link>
-              <Link to="/register" className="bg-yellow-400 px-6 py-3 text-lg rounded-lg hover:bg-yellow-500 transition">
-                Register
-              </Link>
+              {admin && (
+                <>
+                  <Link to="/dashboard" className="border p-5 rounded-md">
+                    Go to Dashboard
+                  </Link>
+                </>
+              )}
+              {!admin && (
+                <>
+                  <Link to="hero" className="border p-5 rounded-md">
+                    Explore Projects
+                  </Link>
+                </>
+              )}
+            </>
+          )}
+          {!user &&(
+            <>
+               <div className="flex">
+                <Link to="/login" className="bg-transparent border text-black py-3 text-lg rounded-lg">
+                  Login
+                </Link>
+                <Link to="/register" className="bg-transparent text-lg border rounded-lg">
+                  Register
+                </Link>
+               </div>
             </>
           )}
         </div>
       </div>
 
       {/* Floating Graphic */}
-      <div className="absolute top-0 right-0">
-        <img src="/assets/hero-graphic.png" alt="Nothing Uploaded" className="max-w-[100vw] w-80 opacity-50" />
+      <div className="">
+        <img src={profile} alt="Nothing Uploaded" className="w-screen h-screen top-0" />
       </div>
     </div>
   );

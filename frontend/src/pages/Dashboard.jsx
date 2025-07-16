@@ -7,7 +7,7 @@ const Dashboard = () => {
   console.log(user.profileImage)
 
   return (
-    <div className="max-w-4xl mx-auto bg-transparent shadow-lg rounded-xl">
+    <div className="max-w-4xl mx-auto bg-transparent shadow-lg rounded-xl mt-50 w-1/2">
       <div className="flex flex-col items-center text-center">
         {/* Profile Picture */}
         <div className="relative">
@@ -25,7 +25,7 @@ const Dashboard = () => {
         </div>
 
         {/* Welcome Message */}
-        <h2 className="text-4xl font-bold mt-4 text-gray-800">Welcome, {user.fullname}!</h2>
+        <h2 className="text-4xl font-bold mt-4 p-4 text-black">Welcome, {user.fullname}!</h2>
         {/*<p className="text-gray-500 mt-2">{user.email}</p>*/}
       </div>
 
@@ -36,10 +36,10 @@ const Dashboard = () => {
         {user.role === "admin" ? (
           <div>
             <h3 className="text-2xl font-semibold text-blue-600">Admin Panel</h3>
-            <p className="text-gray-600 mt-2">Manage users and projects efficiently.</p>
+            <p className="text-black mt-2">Manage users and projects efficiently.</p>
             <Link
               to="/projects/manage"
-              className="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition shadow-md"
+              className="mt-4 mb-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition shadow-md"
             >
               Manage Projects
             </Link>

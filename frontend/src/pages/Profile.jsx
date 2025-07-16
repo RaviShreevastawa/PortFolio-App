@@ -46,7 +46,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex flex-col items-center mt-10">
+    <div className="flex flex-col items-center max-w-4xl mx-auto bg-transparent shadow-lg rounded-xl mt-50 w-1/2 pb-5">
       <h2 className="text-3xl font-bold mb-4">Your Profile</h2>
 
       <div className="relative w-40 h-40 rounded-full overflow-hidden shadow-lg">

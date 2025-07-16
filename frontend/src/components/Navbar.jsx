@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
 
 const Navbar = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user, admin } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -11,23 +11,41 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-blue-600 text-white p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-xl font-bold">MERN App</Link>
+    <nav className="bg-blue-600 text-white">
+      <div className="container mx-auto flex justify-between items-center px-4 py-2">
+        <Link to="/" className="text-xl font-bold">PortFolio App</Link>
 
-        <div>
-          {user ? (
+        <div className="flex gap-4 items-center">
+          {user && (
             <>
-              <Link to="/dashboard" className="mr-4">Dashboard</Link>
-              <Link to="/profile" className="">Profile</Link>
-              <Link to="/projects" className="">Projects</Link>
-              <Link to="/projects/manage" className="">Manage Projects</Link>
+              {!admin && (
+                <>
+                  <Link to="/hero">Hero</Link>
+                  <Link to="/about">About</Link>
+                  <Link to="/projects">Projects</Link>
+                  <Link to="/experience">Experience</Link>
+                  <Link to="/skills">Skills</Link>
+                  <Link to="/education">Education</Link>
+                  <Link to="/certifications">Certifications</Link>
+                  <Link to="/blog">Blog</Link>
+                  <Link to="/contact">Contact</Link>
+                </>
+              )}
+              {admin && (
+                <>
+                  <Link to="/dashboard">Dashboard</Link>
+                  <Link to="/profile">Profile</Link>
+                  <Link to="/projects">Projects</Link>
+                  <Link to="/projects/manage">Manage Projects</Link>
+                </>
+              )}
               <button onClick={handleLogout} className="bg-red-500 px-3 py-1 rounded">Logout</button>
             </>
-          ) : (
+          )}
+          {!user && (
             <>
-              <Link to="/login" className="mr-4">Login</Link>
-              <Link to="/register" className="bg-green-500 px-3 py-1 rounded">Register</Link>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Register</Link>
             </>
           )}
         </div>

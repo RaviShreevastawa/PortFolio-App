@@ -2,46 +2,39 @@
 @import "tailwindcss";
 
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
 
-body {
-  background-color: #f4f4f4;
-  color: #333;
-  line-height: 1.6;
-  width: 100vw;
-}
-
 /* Centering the Main Content */
-main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-}
 
 /* Button Styles */
 button {
   transition: all 0.3s ease-in-out;
 }
 
-button:hover {
-  transform: scale(1.05);
-}
-
 /* Form Styles */
 input {
-  width: 100%;
+  width: 90%;
   padding: 10px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
+  margin: 20px;
+  border: 1px solid #110101;
+  border-radius: 5px;
+}
+textarea {
+  width: 90%;
+  padding: 10px;
+  margin: 20px;
+  border: 1px solid #110101;
   border-radius: 5px;
 }
 
 input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+textarea:focus {
   border-color: #007bff;
   outline: none;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
@@ -51,15 +44,15 @@ input:focus {
 nav {
   background: linear-gradient(90deg, #007bff, #6610f2);
   padding: 15px;
-  color: white;
   font-size: 18px;
 }
 
 nav a {
-  color: white;
+  color: black;
   margin-right: 15px;
   text-decoration: none;
   transition: color 0.3s;
+  padding: 5px;
 }
 
 nav a:hover {
@@ -68,7 +61,7 @@ nav a:hover {
 
 /* Footer */
 footer {
-  background: #222;
+  background: linear-gradient(90deg, #6610f2, #9810fa);
   color: white;
   text-align: center;
   padding: 10px;
@@ -76,6 +69,7 @@ footer {
   bottom: 0;
   width: 100%;
 }
+
 
 /* Responsive Design */
 @media (max-width: 768px) {

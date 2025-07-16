@@ -87,7 +87,13 @@ export const uploadProfileImage = createAsyncThunk("auth/uploadProfileImage", as
 // ✅ Redux Slice
 const authSlice = createSlice({
   name: "auth",
-  initialState: { user: storedUser, token: storedToken, loading: false, error: null },
+  initialState: { 
+    user: storedUser, 
+    token: storedToken, 
+    admin: storedUser?.role === "admin" || false,
+    loading: false, 
+    error: null 
+  },
   reducers: {
     clearError: (state) => {
       state.error = null;
@@ -99,6 +105,7 @@ const authSlice = createSlice({
       // This is for token expiration handling
       state.user = null;
       state.token = null;
+      state.admin = false;
       localStorage.removeItem("user");
       localStorage.removeItem("accessToken");
     }
@@ -126,6 +133,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.admin = action.payload.user.role === "admin";
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -135,6 +143,7 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.token = null;
+        state.admin = false;
       });
   },
 });

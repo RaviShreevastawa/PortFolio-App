@@ -29,6 +29,7 @@ router.post("/logout", authenticateUser, logoutUser);
 
 // User Profile Routes
 router.get("/profile", authenticateUser, getUserProfile);
+router.put("/profile", authenticateUser, getUserProfile);
 
 // Ensure authentication runs before multer middleware
 router.post("/upload-profile", authenticateUser, upload.single("profileImage"), uploadProfileImage);

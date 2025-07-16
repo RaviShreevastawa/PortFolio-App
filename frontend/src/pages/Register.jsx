@@ -40,10 +40,10 @@ const Register = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-semibold text-center text-gray-800">Register</h2>
-        <p className="text-gray-600 text-center">Create an account to explore projects</p>
+    <div className="flex justify-center items-center mt-50">
+      <div className="max-w-md bg-transparent shadow-lg rounded-lg">
+        <h2 className="text-3xl font-semibold text-center text-black">Register</h2>
+        <p className="text-black text-center">Create an account to explore projects</p>
 
         {error && <p className="text-red-500 text-center">{error}</p>}
 
@@ -55,7 +55,7 @@ const Register = () => {
             value={formData.fullname || ""}
             onChange={handleChange}
             autoComplete="off"
-            className="w-full p-2 border rounded-md mb-2"
+            className=""
           />
 
           <input
@@ -65,7 +65,7 @@ const Register = () => {
             value={formData.email || ""}
             onChange={handleChange}
             autoComplete="off"
-            className="w-full p-2 border rounded-md mb-2"
+            className=""
           />
 
           <input
@@ -75,21 +75,21 @@ const Register = () => {
             value={formData.password || ""}
             onChange={handleChange}
             autoComplete="off"
-            className="w-full p-2 border rounded-md mb-2"
+            className=""
           />
 
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition"
+            className="w-full bg-lime-500 text-white py-2 rounded-md hover:bg-green-700 transition"
             disabled={loading}
           >
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
-        <p className="text-center text-gray-600 mt-3">
+        <p className="text-center text-black mt-3">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-500 hover:underline">
+          <a href="/login" className="text-lime-500 hover:underline">
             Login here
           </a>
         </p>
